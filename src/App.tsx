@@ -1,40 +1,55 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-
+import { useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Outlet } from "react-router-dom";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import DashboardPage from "./pages/DashboardPage";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
-import NotFound from "./pages/NotFound";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
-const queryClient = new QueryClient();
+// Layout component to wrap pages with Header and Footer
+function MainLayout() {
+  return (
+    <div className="relative flex min-h-screen flex-col">
+      <Header />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
+// Auth layout for pages that shouldn't have Header/Footer
+function AuthLayout() {
+    return <Outlet />;
+}
 
-const App = () => (
-<QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
-        <Routes>
+function App() {
+  useEffect(() => {
+    // Apply dark theme by default
+    const root = window.document.documentElement;
+    root.classList.add("dark");
+  }, []);
 
-
-          <Route path="/" element={<LoginPage />} />
+  return (
+    <Router>
+      <Routes>
+        {/* Routes with Header and Footer */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/sign-up" element={<SignUpPage />} />
-          {/* catch-all */}
-          <Route path="*" element={<NotFound />} />
-
-
-        </Routes>
-    </BrowserRouter>
-    </TooltipProvider>
-</QueryClientProvider>
-);
+        </Route>
+        
+        {/* Auth routes without Header and Footer */}
+        <Route element={<AuthLayout />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+}
 
 export default App;
