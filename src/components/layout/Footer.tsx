@@ -1,33 +1,11 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-
-const Footer: React.FC = () => {
-  console.log('Footer loaded');
-  const currentYear = new Date().getFullYear();
-
+export default function Footer() {
   return (
-    <footer className="border-t bg-muted/50">
-      <div className="container flex flex-col items-center justify-between gap-4 py-8 md:flex-row">
+    <footer className="border-t">
+      <div className="container flex h-14 items-center justify-center">
         <p className="text-sm text-muted-foreground">
-          &copy; {currentYear} QuickLogin. All rights reserved.
+          &copy; {new Date().getFullYear()} MyApp. All rights reserved.
         </p>
-        <nav className="flex gap-4 sm:gap-6">
-          <Link
-            to="#"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            Terms of Service
-          </Link>
-          <Link
-            to="#"
-            className="text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            Privacy Policy
-          </Link>
-        </nav>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}
